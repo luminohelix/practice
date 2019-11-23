@@ -8,33 +8,25 @@ Created on Fri Nov 22 23:12:23 2019
 from math import pi, sqrt
 
 measurement = ""
-def radius_given(measure):
-    radius = measure
-    diameter = 2 * radius
-    circumference = pi * diameter
-    area = pi * radius **2
-    return radius, diameter, circumference, area
 
-def diameter_given(measure):
-    radius = measure / 2
-    diameter = measure
-    circumference = pi * diameter
-    area = pi * radius**2
-    return radius, diameter, circumference, area
-
-def circumference_given(measure):
-     radius = (measure / pi) / 2
-     diameter = measure / pi
-     circumference = measure
-     area = pi * radius**2
-     return radius, diameter, circumference, area
-
-def area_given(measure):
-    radius = sqrt(measure) / sqrt(pi)
-    diameter = 2 * radius
-    circumference = pi * diameter
-    area = measure
-    return radius, diameter, circumference, area
+# Function to do calculations based on suffix entered.
+def calculate(measure, suffix):
+    switcher = {
+            # Radius
+            "R" : [measure, 2 * measure, pi * (2 * measure), pi * measure**2 ],
+            # Diameter
+            "D" : [measure / 2, measure, pi * measure, pi * (measure/2)**2],
+            # Circumference
+            "C" : [(measure / pi) / 2, measure / pi, measure,
+                   pi * ((measure / pi) / 2)**2],
+            # Area
+            "A" : [sqrt(measure) / sqrt(pi), 2 * (sqrt(measure) / sqrt(pi)),
+                   pi * 2 * (sqrt(measure) / sqrt(pi)), measure]
+            }
+    return switcher.get(suffix, "Invalid suffix. Use R for radius, D for " +
+                        "diameter, C for Circumference, A for area, or " +
+                        "Q to quit.")
+   
 
 def print_results(radius, diameter, circumference, area):
      print(f"Radius: {radius} units\n" + 
@@ -53,33 +45,21 @@ while measurement != "Q":
         print("Quitting...")
         break
     measurement_num = ""
+    # Get the entered suffix and turn the string into an actual number.
     measure_suffix = measurement[-1].upper()
     
-    #Is it a valid measurement suffix? If not, then print warning.
-    if  measure_suffix != "R" and measure_suffix != "D" and measure_suffix != "C" and measure_suffix != "A":
-            print("Invalid suffix. Use R for radius, D for diameter, C for " +
-              "Circumference, A for area, or Q to quit.")
-    else:
-        # Convert measurement in preparation for calculation.
-        for i in range (0, len(measurement)-1):
-            measurement_num += measurement[i]
-        try:
-            measurement_num = float(measurement_num)
-            # If radius is given...
-            if measure_suffix == "R":
-                result = radius_given(measurement_num)
-            # If diameter is given...
-            elif measure_suffix == "D":
-                result =  diameter_given(measurement_num)
-            # If circumference is given...
-            elif measure_suffix == "C":
-                result = circumference_given(measurement_num)
-            # If area is given...
-            else:
-                result = area_given(measurement_num)
-            # Show all results, in both calculated and simplified form.
-            print_results(result[0],result[1], result[2], result[3])
-        except ValueError:
-            print("Invalid measurement.")
+    for i in range (0, len(measurement)-1):
+        measurement_num += measurement[i]
+    try:
+        measurement_num = float(measurement_num)
+          
+        result = calculate(measurement_num, measure_suffix)
+        # If a calculation happened, there will be 4 values. Otherwise, error.
+        if len(result) == 4:
+            print_results(result[0], result[1], result[2], result[3])
+        else:
+            print(result)
+    except ValueError:
+        print("Invalid measurement.")
         
 
