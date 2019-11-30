@@ -7,7 +7,7 @@ Created on Fri Nov 29 22:47:08 2019
 """
 
 from random import randint
-from colorama import Fore, Back, Style
+from colorama import Fore, Style
 
 # Menu elements.
 
@@ -136,3 +136,18 @@ def cpu_guesses():
         except ValueError:
             print(Fore.RED + "Invalid input. Please enter a number between 1 and 100.")
 
+# Main program loop.
+def main():        
+    while True:
+        title_screen()
+        menu_select = input(Fore.GREEN + "Please select an option: ")
+        if menu_select not in menu:
+            print(Fore.RED + "\nInvalid menu selection.\n")
+        elif menu_select == "3":
+            break
+        else:
+            if menu_select == "1":
+                player_guesses()
+                        
+            else:
+                cpu_guesses()
